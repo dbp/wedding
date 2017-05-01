@@ -1,0 +1,57 @@
+body {
+    font-family: Helvetica;
+    line-height: 1.5em;
+}
+
+a {
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    margin: 20px;
+    text-align: center;
+    font-size: 40pt;
+    line-height: 50pt;
+    font-family: 'Satisfy', cursive;
+}
+
+#navigation {
+    width: 800px;
+    padding-top: 275px;
+    margin: 0 auto;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: auto 275px;
+}
+
+#navigation.home,#navigation.photos {
+    background-image: url("/static/img/main.jpg");
+}
+
+#navigation.venue {
+    background-image: url("/static/img/venue.jpg");
+}
+
+
+#navigation ul {
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+#navigation li {
+    display: inline-block;
+    padding: 10px;
+}
+
+#content img {
+    display: block;
+    max-width: 600px;
+    max-height: 600px;
+    padding: 10px;
+    margin: 0 auto;
+}

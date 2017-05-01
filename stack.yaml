@@ -1,0 +1,9 @@
+resolver: lts-7.9
+packages:
+- '.'
+- location:
+    git: https://github.com/positiondev/larceny.git
+    commit: e8fcf685e30e36c6b3af75c750be00f0bd08367a
+  extra-dep: true
+extra-deps:
+- html-entities-1.1.4
