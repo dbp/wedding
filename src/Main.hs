@@ -11,6 +11,7 @@ import qualified Data.Text as T
 import Data.Text (Text)
 import GHC.IO.Encoding
 import Data.Monoid
+import           System.Environment                (lookupEnv)
 
 type Fill = L.Fill ()
 type Library = L.Library ()
@@ -44,8 +45,9 @@ main :: IO ()
 main = do
   setLocaleEncoding utf8
   ctxt <- initializer
-  putStrLn "Listening on port 3000..."
-  run 3000 $ toWAI ctxt site
+  port <- maybe 3000 read <$> lookupEnv "PORT"
+  putStrLn $ "Listening on port " <> show port <>  "..."
+  run port $ toWAI ctxt site
 
 larcenyServe :: Ctxt -> IO (Maybe Response)
 larcenyServe ctxt = do
