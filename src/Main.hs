@@ -23,7 +23,7 @@ import Text.Digestive.Larceny
 import Text.Digestive.Form
 import           Database.PostgreSQL.Simple        (ConnectInfo (..),
                                                     Connection, close, Only(..),
-                                                    connectPostgreSQL, query, execute)
+                                                    connectPostgreSQL, query, query_, execute)
 import           Data.Pool                         (Pool, createPool, withResource)
 import           Web.Heroku                        (parseDatabaseUrl)
 
@@ -116,13 +116,29 @@ instance FromRow Person where
                    <*> field
 
 
+joinPersons :: Connection -> Rsvp -> IO (Rsvp, [Person])
+joinPersons c x = do p <- query c "select id, name, locked, rsvp_id, include from people where rsvp_id = ?" (Only (rId x))
+                     return (x, p)
+
 getRsvp :: Ctxt -> Text -> IO (Maybe (Rsvp, [Person]))
 getRsvp ctxt k = withResource (db ctxt) $ \c ->
   do r <- query c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps where k = ?" (Only k)
      case r of
-       [x] -> do p <- query c "select id, name, locked, rsvp_id, include from people where rsvp_id = ?" (Only (rId x))
-                 return (Just (x, p))
+       [x] -> Just <$> joinPersons c x
        _ -> return Nothing
+
+getRsvpById :: Ctxt -> Int -> IO (Maybe (Rsvp, [Person]))
+getRsvpById ctxt i = withResource (db ctxt) $ \c ->
+  do r <- query c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps where id = ?" (Only i)
+     case r of
+       [x] -> Just <$> joinPersons c x
+       _ -> return Nothing
+
+
+getAllRsvps :: Ctxt -> IO [(Rsvp, [Person])]
+getAllRsvps ctxt = withResource (db ctxt) $ \c ->
+  do rs <- query_ c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps"
+     mapM (\r -> joinPersons c r) rs
 
 saveRsvp :: Ctxt -> Rsvp -> RsvpData -> IO ()
 saveRsvp ctxt r (RsvpData l fri sat f locked unlocked) =
@@ -180,11 +196,29 @@ rsvpH ctxt k = do
                          redirect $ "/rsvp?k=" <> k
           Nothing -> renderWith ctxt (formFills v <> rsvpSubs rsvp) "rsvp"
 
+rsvpDataH :: Ctxt -> Text -> IO (Maybe Response)
+rsvpDataH ctxt k = if k /= "crup" then return Nothing else do
+  rs <- getAllRsvps ctxt
+  renderWith ctxt (L.subs [("rsvps", L.mapSubs rsvpSubs rs)]) "rsvp_data"
+
+rsvpMergeH :: Ctxt -> Text -> [Int] -> IO (Maybe Response)
+rsvpMergeH ctxt k m = if k /= "crup" then return Nothing else do
+  case m of
+    x:xs -> withResource (db ctxt) $ \c -> do r <- getRsvpById ctxt x
+                                              case r of
+                                                Nothing -> return ()
+                                                Just (r,_) ->
+                                                  mapM_ (\old -> do execute c "update people set rsvp_id = ? where rsvp_id = ?" (rId r, old)
+                                                                    execute c "delete from rsvps where id = ?" (Only old)) xs
+    _ -> return ()
+  redirect "/rsvp_data?s=crup"
 
 site :: Ctxt -> IO Response
 site ctxt = route ctxt [ path "static" ==> staticServe "static"
                        , path "rsvp" // param "k" ==> rsvpH
                        , path "rsvp" ==> \_ -> render ctxt "rsvp_lookup"
+                       , path "rsvp_data" // param "s" ==> rsvpDataH
+                       , path "rsvp_data_merge" // param "s" // param "merge" ==> rsvpMergeH
                        , anything ==> larcenyServe
                        ]
             `fallthrough` do r <- render ctxt "404"
