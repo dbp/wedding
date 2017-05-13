@@ -5,5 +5,13 @@ packages:
     git: https://github.com/positiondev/larceny.git
     commit: e8fcf685e30e36c6b3af75c750be00f0bd08367a
   extra-dep: true
+- location:
+    git: https://github.com/positiondev/fn.git
+    commit: 28d81b33b9513a8f1290b12b161ea1aa6dd6cf4c
+  extra-dep: true
+  subdirs:
+  - fn
 extra-deps:
 - html-entities-1.1.4
+- digestive-functors-0.8.2.0
+- heroku-0.1.2.3
