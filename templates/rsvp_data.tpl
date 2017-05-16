@@ -21,7 +21,7 @@
                 <confirmed>CONFIRMED</confirmed>
             </td>
             <td>
-                <k/>
+                <a href="/rsvp?k=${k}"><k/></a>
             </td>
             <td>
                 <lodging/>

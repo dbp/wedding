@@ -163,6 +163,8 @@ rsvpSubs (r, ps) = L.subs
   ,("k", L.textFill $ rK r)
   ,("lodging", L.textFill $ fromMaybe "" $ rLodging r)
   ,("confirmed", if isJust (rConfirmedAt r) then L.fillChildren else L.textFill "")
+  ,("not-confirmed", if isNothing (rConfirmedAt r) then L.fillChildren else L.textFill "")
+  ,("confirmed-class", L.textFill $ if isJust (rConfirmedAt r) then "confirmed" else "")
   ,("friday-checked", if rFriday r == Just True then L.fillChildren else L.textFill "")
   ,("friday-not-checked", if rFriday r /= Just True then L.fillChildren else L.textFill "")
   ,("saturday-checked", if rSaturday r == Just True then L.fillChildren else L.textFill "")
@@ -172,8 +174,8 @@ rsvpSubs (r, ps) = L.subs
   ]
 
 rsvpForm :: (Rsvp, [Person]) -> Form Text IO RsvpData
-rsvpForm (r,ps) = RsvpData <$> "lodging" .: choice [("hlroom", "Highland Lodge - Main Lodge")
-                                            ,("hlcabin", "Highland Lodge - Cabin")
+rsvpForm (r,ps) = RsvpData <$> "lodging" .: choice [("hlroom", "Main Building, Highland Lodge")
+                                            ,("hlcabin", "Cabin, Highland Lodge")
                                             ,("off", "Arrange our own housing")] (rLodging r)
                     <*> "friday" .: bool (rFriday r `mplus` Just True)
                     <*> "saturday" .: bool (rSaturday r `mplus` Just True)
@@ -185,7 +187,8 @@ rsvpForm (r,ps) = RsvpData <$> "lodging" .: choice [("hlroom", "Highland Lodge -
 
 
 rsvpH :: Ctxt -> Text -> IO (Maybe Response)
-rsvpH ctxt k = do
+rsvpH ctxt k' = do
+  let k = T.toUpper $ T.strip k'
   r <- getRsvp ctxt k
   case r of
     Nothing -> return Nothing

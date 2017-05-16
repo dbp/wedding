@@ -11,12 +11,158 @@ a:hover {
     text-decoration: underline;
 }
 
-h1 {
+span {
+    font-family: 'Helvetica', sans-serif;
+    font-weight: normal;
+}
+
+h1, h3, h4 {
+    margin: 20px;
+    margin-top: 25px;
+    text-align: center;
+    font-family: 'Satisfy', cursive;
+}
+
+h4 {
+    text-align: left;
+    font-size: 24pt;
+    line-height: 30pt;
+}
+
+p, form {
     margin: 20px;
     text-align: center;
+}
+
+h1 {
     font-size: 40pt;
     line-height: 50pt;
+}
+
+h3 {
+    font-size: 24pt;
+    line-height: 30pt;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.check {
+    width: 450px;
+    margin: 15px auto;
+    text-align: left;
+}
+
+.styled .person input[type=text] {
+    font-size: 18pt;
+    width: 50%;
+}
+
+.styled {
+    padding: 1px 10px;
+    border-radius: 10px;
+    background-color: #efefef;
+}
+.styled.confirmed {
+    color: #777;
+}
+
+.styled em {
+    font-size: 1.3em;
     font-family: 'Satisfy', cursive;
+}
+
+.styled input[type=text], .styled textarea, .styled input[type=submit] {
+    font-size: 30pt;
+    width: 100%;
+    margin: 5px auto;
+    border-radius: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+.styled textarea {
+    font-size: 20pt;
+    height: 4em;
+}
+
+.styled.confirmed textarea {
+    color: #777;
+}
+
+
+.styled select {
+    font-size: 1.1em;
+    border-radius: 5px;
+    border: 0;
+}
+
+.styled.confirmed select {
+    background-color: #ccc;
+    color: #777;
+}
+
+
+input[type=submit]:hover {
+    cursor: pointer;
+}
+
+.styled input.narrow, .styled input[type=submit] {
+    width: 50%;
+    text-align: center;
+}
+
+.styled input[type=submit] {
+    font-family: 'Satisfy', cursive;
+}
+
+.styled.confirmed input[type=submit] {
+    color: #777;
+}
+
+.checkbox {
+    position: relative;
+    border-bottom: 1px dashed #000;
+}
+
+.confirmed .checkbox {
+    border-bottom: 1px dashed #999;
+}
+
+.checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox input[type="checkbox"]:checked + label:after {
+    background-color: #424242;
+    border-color: #424242;
+    content: "\2713";
+    display: inline-block;
+    text-align: center;
+    color:#fff;
+}
+.styled.confirmed .checkbox input[type="checkbox"]:checked + label:after {
+    background-color: #777;
+    border-color: #777;
+}
+.checkbox label{
+    cursor:pointer;
+}
+.checkbox label:after {
+    content: "";
+    cursor:pointer;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    border: 1px solid #cccccc;
+    background-color: #fff;
+    -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
 #navigation {
@@ -34,6 +180,10 @@ h1 {
 
 #navigation.venue {
     background-image: url("/static/img/venue.jpg");
+}
+
+#navigation.rsvp {
+    background-image: url("/static/img/cabin.jpg");
 }
 
 
