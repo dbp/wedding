@@ -49,6 +49,14 @@ form {
     margin: 10px auto;
 }
 
+table tr:nth-of-type(odd) {
+    background-color: #efefef;
+}
+
+table td {
+    padding: 5px;
+}
+
 .content {
     max-width: 600px;
     margin: 0 auto;
