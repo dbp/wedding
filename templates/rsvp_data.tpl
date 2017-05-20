@@ -15,7 +15,7 @@
                     <input type="checkbox" name="merge" value="${id}"/>
                 </td>
             <td>
-                <confirmed>✔</confirmed>
+                <confirmed>✔ <a href="/rsvp_unconfirm?i=${id}">undo</a></confirmed>
             </td>
             <td>
                 <a href="/rsvp?k=${k}"><k/></a>

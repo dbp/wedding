@@ -236,6 +236,11 @@ rsvpPersonDeleteH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "delete from people where id = ?" (Only i)
   redirect "/rsvp_data?s=crup"
 
+rsvpUnconfirmH :: Ctxt -> Int -> IO (Maybe Response)
+rsvpUnconfirmH ctxt i = do
+  withResource (db ctxt) $ \c -> execute c "update rsvps set confirmed_at = null where id = ?" (Only i)
+  redirect "/rsvp_data?s=crup"
+
 
 site :: Ctxt -> IO Response
 site ctxt = route ctxt [ path "static" ==> staticServe "static"
@@ -247,6 +252,7 @@ site ctxt = route ctxt [ path "static" ==> staticServe "static"
                        , path "rsvp_person_lock" // param "i" ==> rsvpPersonLockH
                        , path "rsvp_person_unlock" // param "i" ==> rsvpPersonUnlockH
                        , path "rsvp_person_delete" // param "i" ==> rsvpPersonDeleteH
+                       , path "rsvp_unconfirm" // param "i" ==> rsvpUnconfirmH
                        , anything ==> larcenyServe
                        ]
             `fallthrough` do r <- render ctxt "404"
