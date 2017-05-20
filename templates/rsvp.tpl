@@ -6,13 +6,13 @@
     </h3>
 
     <not-confirmed>
-    <p>
-        Is this not you? Please email us and we'll get you the right code.
+        <p>
+            Is this not you? Please email us at <a href="mailto:contact@amydanielwedding.com">contact@amydanielwedding.com</a> and we'll get you the right code.
     </p>
     </not-confirmed>
 
     <confirmed>
-            <p>You're all set! If anything changes, you can still make changes below.</p>
+            <p>You're all set! If anything changes, you can still make changes below, but be sure to click the "Update" button afterwards.</p>
     </confirmed>
 
     <dfForm class="styled ${confirmed-class}" ref="rsvp">

@@ -1,3 +1,4 @@
+<bind tag="class">nopic</bind>
 <apply template="_base">
 
     <form action="rsvp_data_merge">
