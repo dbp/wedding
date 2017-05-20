@@ -2,14 +2,10 @@
 
     <form action="rsvp_data_merge">
         <input type="hidden" name="s" value="crup"/>
-        <input type="submit" value="MERGE"/>
     <table>
-        <tr><th>MERGE</th>
+        <tr><th><input type="submit" value="MERGE"/></th>
             <th>Confirmed</th>
             <th>URL</th>
-            <th>Lodging</th>
-            <th>Days</th>
-            <th>Food</th>
             <th>People</th>
         </tr>
         <rsvps>
@@ -18,24 +14,21 @@
                     <input type="checkbox" name="merge" value="${id}"/>
                 </td>
             <td>
-                <confirmed>CONFIRMED</confirmed>
+                <confirmed>✔</confirmed>
             </td>
             <td>
                 <a href="/rsvp?k=${k}"><k/></a>
             </td>
-            <td>
-                <lodging/>
-            </td>
-            <td>
-                <friday-checked>Friday</friday-checked>
-                <saturday-checked>Saturday</saturday-checked>
-            </td>
-            <td><food/></td>
             <td> <people>
                 <include><strong><name/></strong></include>
-                    <not-include><name/></not-include>,
+                <not-include><name/></not-include>
+                <locked><a href="/rsvp_person_unlock?i=${id}">✎</a></locked>
+                <not-locked>
+                    <a href="/rsvp_person_lock?i=${id}">🔒</a>
+                    <a href="/rsvp_person_delete?i=${id}" onclick="return confirm('Are you sure you want to remove ${name}?')">✗</a>
+                </not-locked>,
                 </people>
-
+                <a href="/rsvp_person_add?i=${id}">Add</a>
             </td>
         </tr>
         </rsvps>

@@ -137,7 +137,7 @@ getRsvpById ctxt i = withResource (db ctxt) $ \c ->
 
 getAllRsvps :: Ctxt -> IO [(Rsvp, [Person])]
 getAllRsvps ctxt = withResource (db ctxt) $ \c ->
-  do rs <- query_ c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps"
+  do rs <- query_ c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps order by id asc"
      mapM (\r -> joinPersons c r) rs
 
 saveRsvp :: Ctxt -> Rsvp -> RsvpData -> IO ()
@@ -216,12 +216,37 @@ rsvpMergeH ctxt k m = if k /= "crup" then return Nothing else do
     _ -> return ()
   redirect "/rsvp_data?s=crup"
 
+rsvpPersonAddH :: Ctxt -> Int -> IO (Maybe Response)
+rsvpPersonAddH ctxt i = do
+  withResource (db ctxt) $ \c -> execute c "insert into people (name, locked, rsvp_id) values ('Guest',false, ?)" (Only i)
+  redirect "/rsvp_data?s=crup"
+
+rsvpPersonLockH :: Ctxt -> Int -> IO (Maybe Response)
+rsvpPersonLockH ctxt i = do
+  withResource (db ctxt) $ \c -> execute c "update people set locked = true where id = ?" (Only i)
+  redirect "/rsvp_data?s=crup"
+
+rsvpPersonUnlockH :: Ctxt -> Int -> IO (Maybe Response)
+rsvpPersonUnlockH ctxt i = do
+  withResource (db ctxt) $ \c -> execute c "update people set locked = false where id = ?" (Only i)
+  redirect "/rsvp_data?s=crup"
+
+rsvpPersonDeleteH :: Ctxt -> Int -> IO (Maybe Response)
+rsvpPersonDeleteH ctxt i = do
+  withResource (db ctxt) $ \c -> execute c "delete from people where id = ?" (Only i)
+  redirect "/rsvp_data?s=crup"
+
+
 site :: Ctxt -> IO Response
 site ctxt = route ctxt [ path "static" ==> staticServe "static"
                        , path "rsvp" // param "k" ==> rsvpH
                        , path "rsvp" ==> \_ -> render ctxt "rsvp_lookup"
                        , path "rsvp_data" // param "s" ==> rsvpDataH
                        , path "rsvp_data_merge" // param "s" // param "merge" ==> rsvpMergeH
+                       , path "rsvp_person_add" // param "i" ==> rsvpPersonAddH
+                       , path "rsvp_person_lock" // param "i" ==> rsvpPersonLockH
+                       , path "rsvp_person_unlock" // param "i" ==> rsvpPersonUnlockH
+                       , path "rsvp_person_delete" // param "i" ==> rsvpPersonDeleteH
                        , anything ==> larcenyServe
                        ]
             `fallthrough` do r <- render ctxt "404"
