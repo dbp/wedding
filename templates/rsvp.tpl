@@ -95,7 +95,7 @@
     <script type="text/javascript">
      function update_person_message (elem) {
          window.elem = elem;
-         if (elem.parent().find("input")[0].checked) {
+         if (elem.parent().find("input").last()[0].checked) {
              elem.find("em").text("will attend");
          } else {
              elem.find("em").text("will not attend");
