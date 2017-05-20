@@ -5,7 +5,7 @@
 
     <div class="content">
 
-        <p>This will be filled out as we get closer to the date.</p>
+     
 
         <p><strong>Friday</strong></p>
 
