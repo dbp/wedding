@@ -4,7 +4,7 @@
     <form action="rsvp_data_merge">
         <input type="hidden" name="s" value="crup"/>
         <table cellspacing="0">
-        <tr><th><input type="submit" value="MERGE"/></th>
+        <tr><th><input style="position: fixed; left: 100px; font-weight: bold; font-size: 20px;" type="submit" value="MERGE"/></th>
             <th>Confirmed</th>
             <th>URL</th>
             <th>People</th>
