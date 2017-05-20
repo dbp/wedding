@@ -79,8 +79,8 @@
         <h4>Food</h4>
 
                 <dfLabel ref="food">
-                    <p>Please describe any food allergies / restrictions, and
-                    the number of people in your party with them.</p>
+                    <p>Please describe any food allergies or restrictions, and
+                    the number of people in your party who have them.</p>
                     <dfInputTextArea ref="food"/>
                 </dfLabel>
 
