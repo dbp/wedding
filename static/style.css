@@ -46,6 +46,24 @@ h3 {
 
 form {
     max-width: 600px;
+    margin: 10px auto;
+}
+
+.content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.content p {
+    text-align: justify;
+}
+
+.footer {
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    padding-top: 10px;
+    max-width: 600px;
+    text-align: center;
     margin: 0 auto;
 }
 

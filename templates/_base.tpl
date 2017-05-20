@@ -17,12 +17,15 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/venue">Venue</a></li>
                 <li><a href="/schedule">Schedule</a></li>
-                <li><a href="/us">Us</a></li>
+                <!-- <li><a href="/us">Us</a></li> -->
                 <li><a href="/rsvp">RSVP</a></li>
             </ul>
         </div>
 
         <apply-content/>
 
+        <div class="footer">
+If you have questions, feel free to email us at <a href="mailto:contact@amydanielwedding.com">contact@amydanielwedding.com</a>.
+        </div>
     </body>
 </html>
