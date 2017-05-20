@@ -117,7 +117,7 @@ instance FromRow Person where
 
 
 joinPersons :: Connection -> Rsvp -> IO (Rsvp, [Person])
-joinPersons c x = do p <- query c "select id, name, locked, rsvp_id, include from people where rsvp_id = ?" (Only (rId x))
+joinPersons c x = do p <- query c "select id, name, locked, rsvp_id, include from people where rsvp_id = ? order by id asc" (Only (rId x))
                      return (x, p)
 
 getRsvp :: Ctxt -> Text -> IO (Maybe (Rsvp, [Person]))
