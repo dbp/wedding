@@ -244,6 +244,7 @@ rsvpUnconfirmH ctxt i = do
 
 site :: Ctxt -> IO Response
 site ctxt = route ctxt [ path "static" ==> staticServe "static"
+                       , path "RSVP" ==> \_ -> redirect "/rsvp"
                        , path "rsvp" // param "k" ==> rsvpH
                        , path "rsvp" ==> \_ -> render ctxt "rsvp_lookup"
                        , path "rsvp_data" // param "s" ==> rsvpDataH
