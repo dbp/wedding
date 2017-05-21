@@ -15,11 +15,13 @@
         <div id="navigation" class="${class}">
             <ul>
                 <li><a href="/">Home</a></li>
+		<li><a href="/rsvp">RSVP</a></li>
                 <li><a href="/venue">Venue</a></li>
+		  <li><a href="/schedule">Schedule</a></li>
                 <li><a href="/travel">Travel</a></li>
-                <li><a href="/schedule">Schedule</a></li>
+               <li><a href="/lodging">Lodging</a></li>
                 <!-- <li><a href="/us">Us</a></li> -->
-                <li><a href="/rsvp">RSVP</a></li>
+                
             </ul>
         </div>
 
