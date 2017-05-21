@@ -5,9 +5,13 @@
         <link rel="stylesheet" type="text/css" href="/static/style.css"/>
         <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
         <script
-			      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-			      integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+			      src="https://code.jquery.com/jquery-3.2.1.min.js"
 			      crossorigin="anonymous"></script>
+
+        <script
+			      src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"
+			      crossorigin="anonymous"></script>
+
     </head>
     <body>
         <h1>Solidarity ♡ Forever</h1>

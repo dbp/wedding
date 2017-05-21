@@ -40,6 +40,7 @@
             </div>
         </people>
 
+        <div class="rest">
         <h4>Lodging</h4>
 
 
@@ -84,6 +85,8 @@
                     <dfInputTextArea ref="food"/>
                 </dfLabel>
 
+        </div>
+
                 <not-confirmed>
                     <dfInputSubmit value="Confirm"/>
                 </not-confirmed>
@@ -101,10 +104,19 @@
              elem.find("em").text("will not attend");
          }
      }
+     function update_rest_visibility () {
+         if ($(".person input[type=checkbox]").filter(function (_,e) { return e.checked; }).length === 0) {
+             $(".rest").slideUp("slow"); 
+         } else {
+             $(".rest").slideDown("slow"); 
+         }
+
+     }
      $(".person label").on("click", function () {
          var x = $(this);
          window.setTimeout(function () {
              update_person_message(x);
+             update_rest_visibility();
          }, 0);
      });
      $(".person label").each(function (_, elem) {
