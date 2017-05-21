@@ -207,6 +207,7 @@ password = unsafePerformIO (maybe "pass" T.pack <$> lookupEnv "PASSWORD")
 data Authenticated = Authenticated
 instance FromParam Authenticated where
   fromParam [x] = if x == password then Right Authenticated else Left (ParamOtherError "Invalid Password")
+  fromParam _ = Left (ParamOtherError "Invalid Password")
 
 rsvpDataH :: Ctxt -> IO (Maybe Response)
 rsvpDataH ctxt = do
