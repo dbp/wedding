@@ -212,6 +212,10 @@ input[type=submit]:hover {
     background-image: url("/static/img/cabin.jpg");
 }
 
+#navigation.notfound {
+    background-image: url("/static/img/notfound.jpg");
+}
+
 
 #navigation ul {
     padding: 0;

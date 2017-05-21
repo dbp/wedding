@@ -2,6 +2,8 @@
 
 module Main where
 
+import System.IO.Unsafe (unsafePerformIO)
+import System.Environment (lookupEnv)
 import Data.Traversable
 import Control.Monad
 import Database.PostgreSQL.Simple.FromRow
@@ -199,13 +201,24 @@ rsvpH ctxt k' = do
                          redirect $ "/rsvp?k=" <> k
           Nothing -> renderWith ctxt (formFills v <> rsvpSubs rsvp) "rsvp"
 
-rsvpDataH :: Ctxt -> Text -> IO (Maybe Response)
-rsvpDataH ctxt k = if k /= "crup" then return Nothing else do
-  rs <- getAllRsvps ctxt
-  renderWith ctxt (L.subs [("rsvps", L.mapSubs rsvpSubs rs)]) "rsvp_data"
+password :: Text
+password = unsafePerformIO (maybe "pass" T.pack <$> lookupEnv "PASSWORD")
 
-rsvpMergeH :: Ctxt -> Text -> [Int] -> IO (Maybe Response)
-rsvpMergeH ctxt k m = if k /= "crup" then return Nothing else do
+data Authenticated = Authenticated
+instance FromParam Authenticated where
+  fromParam [x] = if x == password then Right Authenticated else Left (ParamOtherError "Invalid Password")
+
+rsvpDataH :: Ctxt -> IO (Maybe Response)
+rsvpDataH ctxt = do
+  rs <- getAllRsvps ctxt
+  renderWith ctxt (L.subs [("rsvps", L.mapSubs rsvpSubs rs)
+                          ,("s", L.textFill password)]) "_data"
+
+redirectAdmin :: IO (Maybe Response)
+redirectAdmin = redirect $ "/data?s=" <> password
+
+rsvpMergeH :: Ctxt -> [Int] -> IO (Maybe Response)
+rsvpMergeH ctxt m = do
   case m of
     x:xs -> withResource (db ctxt) $ \c -> do r <- getRsvpById ctxt x
                                               case r of
@@ -214,46 +227,50 @@ rsvpMergeH ctxt k m = if k /= "crup" then return Nothing else do
                                                   mapM_ (\old -> do execute c "update people set rsvp_id = ? where rsvp_id = ?" (rId r, old)
                                                                     execute c "delete from rsvps where id = ?" (Only old)) xs
     _ -> return ()
-  redirect "/rsvp_data?s=crup"
+  redirectAdmin
 
 rsvpPersonAddH :: Ctxt -> Int -> IO (Maybe Response)
 rsvpPersonAddH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "insert into people (name, locked, rsvp_id) values ('Guest',false, ?)" (Only i)
-  redirect "/rsvp_data?s=crup"
+  redirectAdmin
 
 rsvpPersonLockH :: Ctxt -> Int -> IO (Maybe Response)
 rsvpPersonLockH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "update people set locked = true where id = ?" (Only i)
-  redirect "/rsvp_data?s=crup"
+  redirectAdmin
 
 rsvpPersonUnlockH :: Ctxt -> Int -> IO (Maybe Response)
 rsvpPersonUnlockH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "update people set locked = false where id = ?" (Only i)
-  redirect "/rsvp_data?s=crup"
+  redirectAdmin
 
 rsvpPersonDeleteH :: Ctxt -> Int -> IO (Maybe Response)
 rsvpPersonDeleteH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "delete from people where id = ?" (Only i)
-  redirect "/rsvp_data?s=crup"
+  redirectAdmin
 
 rsvpUnconfirmH :: Ctxt -> Int -> IO (Maybe Response)
 rsvpUnconfirmH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "update rsvps set confirmed_at = null where id = ?" (Only i)
-  redirect "/rsvp_data?s=crup"
+  redirectAdmin
 
+
+adminH :: Ctxt -> Authenticated -> IO (Maybe Response)
+adminH ctxt _ = route ctxt [ end ==> rsvpDataH
+                           , path "merge" // param "merge" ==> rsvpMergeH
+                           , path "person_add" // param "i" ==> rsvpPersonAddH
+                           , path "person_lock" // param "i" ==> rsvpPersonLockH
+                           , path "person_unlock" // param "i" ==> rsvpPersonUnlockH
+                           , path "person_delete" // param "i" ==> rsvpPersonDeleteH
+                           , path "unconfirm" // param "i" ==> rsvpUnconfirmH
+                           ]
 
 site :: Ctxt -> IO Response
 site ctxt = route ctxt [ path "static" ==> staticServe "static"
                        , path "RSVP" ==> \_ -> redirect "/rsvp"
                        , path "rsvp" // param "k" ==> rsvpH
                        , path "rsvp" ==> \_ -> render ctxt "rsvp_lookup"
-                       , path "rsvp_data" // param "s" ==> rsvpDataH
-                       , path "rsvp_data_merge" // param "s" // param "merge" ==> rsvpMergeH
-                       , path "rsvp_person_add" // param "i" ==> rsvpPersonAddH
-                       , path "rsvp_person_lock" // param "i" ==> rsvpPersonLockH
-                       , path "rsvp_person_unlock" // param "i" ==> rsvpPersonUnlockH
-                       , path "rsvp_person_delete" // param "i" ==> rsvpPersonDeleteH
-                       , path "rsvp_unconfirm" // param "i" ==> rsvpUnconfirmH
+                       , path "data" // param "s" ==> adminH
                        , anything ==> larcenyServe
                        ]
             `fallthrough` do r <- render ctxt "404"
