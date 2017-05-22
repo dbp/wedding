@@ -12,10 +12,10 @@
 
         <p><strong>Rates / Rooms</strong>
 For the weekend of our wedding, we have negotiated rates from between
-$100 to $140 per night for rooms in the lodge (at 2 people per room - slightly higher if
-more than two people are in a room). For cabins, the rates are between $120 to $260
+$100 to $140 per night for rooms in the lodge (at two people per room - slightly higher if
+more than two people are in a room). For cabins, the rates are between $120 to $260 total
 per night (depending on which cabin, and how many people are in each cabin -
-some can sleep up to 8 people). Unless you are a larger party, staying in a
+some of the pricier ones can sleep up to eight people). Unless you are a larger party, staying in a
 cabin will likely mean sharing with others (as even the smaller cabins have more
 than one room). 
         </p>
