@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <p>Based on your response, we will follow up with you about how to book your accomodations.</p>
+        <p>Based on your response, we will follow up with you about how to book your accomodations. For more information, visit the <a href="/lodging" target="_blank">Lodging</a> page.</p>
 
         <h4>Food</h4>
 
