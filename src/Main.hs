@@ -84,7 +84,7 @@ larcenyServe ctxt = do
                      , anything ==> \ctxt -> render ctxt idx
                      ]
 
-data RsvpData = RsvpData Text Bool Bool Text [(Int, Bool)] [(Int, Text, Bool)]
+data RsvpData = RsvpData Text Bool Bool Text Text [(Int, Bool)] [(Int, Text, Bool)]
 
 
 data Rsvp = Rsvp { rId :: Int
@@ -93,6 +93,7 @@ data Rsvp = Rsvp { rId :: Int
                  , rFriday :: Maybe Bool
                  , rSaturday :: Maybe Bool
                  , rFood :: Maybe Text
+                 , rEmail :: Maybe Text
                  , rConfirmedAt :: Maybe UTCTime
                  }
 data Person = Person { pId :: Int
@@ -104,6 +105,7 @@ data Person = Person { pId :: Int
 
 instance FromRow Rsvp where
   fromRow = Rsvp <$> field
+                 <*> field
                  <*> field
                  <*> field
                  <*> field
@@ -124,14 +126,14 @@ joinPersons c x = do p <- query c "select id, name, locked, rsvp_id, include fro
 
 getRsvp :: Ctxt -> Text -> IO (Maybe (Rsvp, [Person]))
 getRsvp ctxt k = withResource (db ctxt) $ \c ->
-  do r <- query c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps where k = ?" (Only k)
+  do r <- query c "select id, k, lodging, friday, saturday, food, email, confirmed_at from rsvps where k = ?" (Only k)
      case r of
        [x] -> Just <$> joinPersons c x
        _ -> return Nothing
 
 getRsvpById :: Ctxt -> Int -> IO (Maybe (Rsvp, [Person]))
 getRsvpById ctxt i = withResource (db ctxt) $ \c ->
-  do r <- query c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps where id = ?" (Only i)
+  do r <- query c "select id, k, lodging, friday, saturday, food, email, confirmed_at from rsvps where id = ?" (Only i)
      case r of
        [x] -> Just <$> joinPersons c x
        _ -> return Nothing
@@ -139,13 +141,13 @@ getRsvpById ctxt i = withResource (db ctxt) $ \c ->
 
 getAllRsvps :: Ctxt -> IO [(Rsvp, [Person])]
 getAllRsvps ctxt = withResource (db ctxt) $ \c ->
-  do rs <- query_ c "select id, k, lodging, friday, saturday, food, confirmed_at from rsvps order by id asc"
+  do rs <- query_ c "select id, k, lodging, friday, saturday, food, email, confirmed_at from rsvps order by id asc"
      mapM (\r -> joinPersons c r) rs
 
 saveRsvp :: Ctxt -> Rsvp -> RsvpData -> IO ()
-saveRsvp ctxt r (RsvpData l fri sat f locked unlocked) =
+saveRsvp ctxt r (RsvpData l fri sat f em locked unlocked) =
   withResource (db ctxt) $ \c ->
-    do execute c "update rsvps set lodging = ?, friday = ?, saturday = ?, food = ?, confirmed_at = now() where id = ? and k = ?" (l, fri, sat, f, rId r, rK r)
+    do execute c "update rsvps set lodging = ?, friday = ?, saturday = ?, food = ?, email = ?, confirmed_at = now() where id = ? and k = ?" (l, fri, sat, f, em, rId r, rK r)
        mapM_ (\(pid, conf) -> execute c "update people set include = ? where id = ?" (conf, pid)) locked
        mapM_ (\(pid, name, conf) -> execute c "update people set include = ?, name = ? where id = ?" (conf, name, pid)) unlocked
        return ()
@@ -172,6 +174,7 @@ rsvpSubs (r, ps) = L.subs
   ,("saturday-checked", if rSaturday r == Just True then L.fillChildren else L.textFill "")
   ,("saturday-not-checked", if rSaturday r /= Just True then L.fillChildren else L.textFill "")
   ,("food", L.textFill $ fromMaybe "" $ rFood r)
+  ,("email", L.textFill $ fromMaybe "" $ rEmail r)
   ,("people", L.mapSubs personSubs ps)
   ]
 
@@ -182,11 +185,11 @@ rsvpForm (r,ps) = RsvpData <$> "lodging" .: choice [("hlroom", "Main Building, H
                     <*> "friday" .: bool (rFriday r `mplus` Just True)
                     <*> "saturday" .: bool (rSaturday r `mplus` Just True)
                     <*> "food" .: text (rFood r)
+                    <*> "email" .: text (rEmail r)
                     <*> sequenceA (map (\p -> (pId p, ) <$> ("person-" <> tshow (pId p) <> "-include" .: bool (Just $ pInclude p))) (filter pLocked ps))
                     <*> sequenceA (map (\p -> (pId p, , )
                                          <$> ("person-" <> tshow (pId p) <> "-name" .: text (Just $ pName p))
                                          <*> ("person-" <> tshow (pId p) <> "-include" .: bool (Just $ pInclude p))) (filter (not.pLocked) ps))
-
 
 rsvpH :: Ctxt -> Text -> IO (Maybe Response)
 rsvpH ctxt k' = do

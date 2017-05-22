@@ -41,6 +41,15 @@
         </people>
 
         <div class="rest">
+            <h4>Contact</h4>
+
+            <dfLabel ref="email">
+                <p>Please enter an email address that we can use to contact you about housing and other details:</p>
+
+                <dfInputText class="small" ref="email"/>
+                
+            </dfLabel>
+
         <h4>Lodging</h4>
 
 

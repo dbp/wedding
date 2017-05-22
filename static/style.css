@@ -109,12 +109,18 @@ table td {
     border: 1px solid #ccc;
 }
 
+
+.styled input.small {
+    width: 75%;
+    font-size: 20pt;
+}
+
 .styled textarea {
     font-size: 20pt;
     height: 4em;
 }
 
-.styled.confirmed textarea {
+.styled.confirmed textarea, .styled.confirmed input[type=text] {
     color: #777;
 }
 
