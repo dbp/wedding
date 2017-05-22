@@ -275,6 +275,7 @@ site ctxt = route ctxt [ path "static" ==> staticServe "static"
                        , path "rsvp" // param "k" ==> rsvpH
                        , path "rsvp" ==> \_ -> render ctxt "rsvp_lookup"
                        , path "data" // param "s" ==> adminH
+                       , path "error" ==> \_ -> error "Cause an error!"
                        , anything ==> larcenyServe
                        ]
             `fallthrough` do r <- render ctxt "404"
