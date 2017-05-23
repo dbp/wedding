@@ -1,9 +1,9 @@
-resolver: lts-7.9
+resolver: lts-8.8
 packages:
 - '.'
 - location:
-    git: https://github.com/positiondev/larceny.git
-    commit: e8fcf685e30e36c6b3af75c750be00f0bd08367a
+    git: https://github.com/dbp/larceny.git
+    commit: 70d201e996f56f5cfcd99656e32959c226dd7996
   extra-dep: true
 - location:
     git: https://github.com/positiondev/fn.git
@@ -15,3 +15,4 @@ extra-deps:
 - html-entities-1.1.4
 - digestive-functors-0.8.2.0
 - heroku-0.1.2.3
+- wai-middleware-rollbar-0.4.0

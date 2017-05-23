@@ -1,7 +1,9 @@
-{-# LANGUAGE OverloadedStrings, TupleSections #-}
+{-# LANGUAGE OverloadedStrings, TupleSections, DataKinds #-}
 
 module Main where
 
+import Data.String (fromString)
+import Network.Wai.Middleware.Rollbar
 import System.IO.Unsafe (unsafePerformIO)
 import System.Environment (lookupEnv)
 import Data.Traversable
@@ -71,7 +73,11 @@ main = do
   ctxt <- initializer
   port <- maybe 3000 read <$> lookupEnv "PORT"
   putStrLn $ "Listening on port " <> show port <>  "..."
-  run port $ toWAI ctxt site
+  rb_token <- lookupEnv "ROLLBAR_ACCESS_TOKEN"
+  let rb = case rb_token of
+             Nothing -> id
+             Just tok -> exceptions (Settings (fromString tok) "production" :: Settings '[])
+  run port $ rb $ toWAI ctxt site
 
 larcenyServe :: Ctxt -> IO (Maybe Response)
 larcenyServe ctxt = do
