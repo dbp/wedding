@@ -1,38 +1,42 @@
-{-# LANGUAGE OverloadedStrings, TupleSections, DataKinds #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections     #-}
 
 module Main where
 
-import Data.String (fromString)
-import Network.Wai.Middleware.Rollbar
-import System.IO.Unsafe (unsafePerformIO)
-import System.Environment (lookupEnv)
-import Data.Traversable
-import Control.Monad
-import Database.PostgreSQL.Simple.FromRow
-import Data.Time.Clock
-import Data.Maybe
-import           Network.Wai.Handler.Warp          (run)
-import Network.Wai (Response, pathInfo)
-import Web.Fn
-import qualified Web.Larceny as L
-import qualified Data.Map as M
-import qualified Data.Text as T
-import Data.Text (Text)
-import qualified Data.Text.Encoding as T
-import GHC.IO.Encoding (setLocaleEncoding, utf8)
-import Data.Monoid
-import           System.Environment                (lookupEnv)
-import Web.Fn.Extra.Digestive
-import Text.Digestive.Larceny
-import Text.Digestive.Form
-import           Database.PostgreSQL.Simple        (ConnectInfo (..),
-                                                    Connection, close, Only(..),
-                                                    connectPostgreSQL, query, query_, execute)
-import           Data.Pool                         (Pool, createPool, withResource)
-import           Web.Heroku                        (parseDatabaseUrl)
+import           Control.Monad
+import qualified Data.Map                           as M
+import           Data.Maybe
+import           Data.Monoid
+import           Data.Pool                          (Pool, createPool,
+                                                     withResource)
+import           Data.String                        (fromString)
+import           Data.Text                          (Text)
+import qualified Data.Text                          as T
+import qualified Data.Text.Encoding                 as T
+import           Data.Time.Clock
+import           Data.Traversable
+import           Database.PostgreSQL.Simple         (ConnectInfo (..),
+                                                     Connection, Only (..),
+                                                     close, connectPostgreSQL,
+                                                     execute, query, query_)
+import           Database.PostgreSQL.Simple.FromRow
+import           GHC.IO.Encoding                    (setLocaleEncoding, utf8)
+import           Network.Wai                        (Response, pathInfo)
+import           Network.Wai.Handler.Warp           (run)
+import           Network.Wai.Middleware.Rollbar
+import           System.Environment                 (lookupEnv)
+import           System.Environment                 (lookupEnv)
+import           System.IO.Unsafe                   (unsafePerformIO)
+import           Text.Digestive.Form
+import           Text.Digestive.Larceny
+import           Web.Fn
+import           Web.Fn.Extra.Digestive
+import           Web.Heroku                         (parseDatabaseUrl)
+import qualified Web.Larceny                        as L
 
 
-data Ctxt = Ctxt { _req :: FnRequest
+data Ctxt = Ctxt { _req    :: FnRequest
                  , db      :: Pool Connection
                  , library :: Library
                  }
@@ -93,19 +97,19 @@ larcenyServe ctxt = do
 data RsvpData = RsvpData Text Bool Bool Text Text [(Int, Bool)] [(Int, Text, Bool)]
 
 
-data Rsvp = Rsvp { rId :: Int
-                 , rK :: Text
-                 , rLodging :: Maybe Text
-                 , rFriday :: Maybe Bool
-                 , rSaturday :: Maybe Bool
-                 , rFood :: Maybe Text
-                 , rEmail :: Maybe Text
+data Rsvp = Rsvp { rId          :: Int
+                 , rK           :: Text
+                 , rLodging     :: Maybe Text
+                 , rFriday      :: Maybe Bool
+                 , rSaturday    :: Maybe Bool
+                 , rFood        :: Maybe Text
+                 , rEmail       :: Maybe Text
                  , rConfirmedAt :: Maybe UTCTime
                  }
-data Person = Person { pId :: Int
-                     , pName :: Text
-                     , pLocked :: Bool
-                     , pRsvpId :: Int
+data Person = Person { pId      :: Int
+                     , pName    :: Text
+                     , pLocked  :: Bool
+                     , pRsvpId  :: Int
                      , pInclude :: Bool
                      }
 
@@ -135,19 +139,19 @@ getRsvp ctxt k = withResource (db ctxt) $ \c ->
   do r <- query c "select id, k, lodging, friday, saturday, food, email, confirmed_at from rsvps where k = ?" (Only k)
      case r of
        [x] -> Just <$> joinPersons c x
-       _ -> return Nothing
+       _   -> return Nothing
 
 getRsvpById :: Ctxt -> Int -> IO (Maybe (Rsvp, [Person]))
 getRsvpById ctxt i = withResource (db ctxt) $ \c ->
   do r <- query c "select id, k, lodging, friday, saturday, food, email, confirmed_at from rsvps where id = ?" (Only i)
      case r of
        [x] -> Just <$> joinPersons c x
-       _ -> return Nothing
+       _   -> return Nothing
 
 
 getAllRsvps :: Ctxt -> IO [(Rsvp, [Person])]
 getAllRsvps ctxt = withResource (db ctxt) $ \c ->
-  do rs <- query_ c "select id, k, lodging, friday, saturday, food, email, confirmed_at from rsvps order by id asc"
+  do rs <- query_ c "select id, k, lodging, friday, saturday, food, email, confirmed_at from rsvps order by confirmed_at desc NULLS LAST, id asc"
      mapM (\r -> joinPersons c r) rs
 
 saveRsvp :: Ctxt -> Rsvp -> RsvpData -> IO ()

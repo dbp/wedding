@@ -8,6 +8,7 @@
             <th>Confirmed</th>
             <th>URL</th>
             <th>People</th>
+            <th>Housing</th>
         </tr>
         <rsvps>
             <tr>
@@ -15,7 +16,7 @@
                     <input type="checkbox" name="merge" value="${id}"/>
                 </td>
             <td>
-                <confirmed>✔ <a onclick="return confirm('Are you sure?')" href="/data/unconfirm?i=${id}&s=${s}">undo</a></confirmed>
+                <confirmed>✔</confirmed>
             </td>
             <td>
                 <a href="/rsvp?k=${k}"><k/></a>
@@ -30,6 +31,9 @@
                 </not-locked>,
                 </people>
                 <a href="/data/person_add?i=${id}&s=${s}">Add</a>
+            </td>
+            <td>
+              <lodging/>
             </td>
         </tr>
         </rsvps>
