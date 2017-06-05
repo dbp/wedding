@@ -5,7 +5,7 @@
 
     <div class="content">
 
-     
+      <p><em>NOTE: We can make childcare available for the Ceremony & Reception. Please let us know at <a href="mailto:contact@amydanielwedding.com">contact@amydanielwedding.com</a> if you need that.</em></p>
 
         <p><strong>Friday</strong></p>
 
