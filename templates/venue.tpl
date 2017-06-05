@@ -11,6 +11,15 @@
 <p>We hope you’ll enjoy it as much as we have. 
 </p>
 
+<h3>Things to do!</h3>
+
+<p>Thanks to Anne Cassidy for this list (sorry it's an image, that's how we got it!).</p>
+
+<img src="/static/img/interest1.jpg"/>
+<img src="/static/img/interest2.jpg"/>
+<img src="/static/img/interest3.jpg"/>
+
+
     </div>
 
 </apply>
