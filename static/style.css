@@ -227,6 +227,13 @@ input[type=submit]:hover {
 }
 
 
+#navigation.registry {
+    background-image: url("/static/img/1.jpg");
+    padding-top: 180px;
+    background-size: auto 180px;
+}
+
+
 #navigation ul {
     padding: 0;
     list-style-type: none;
