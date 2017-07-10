@@ -1,6 +1,7 @@
 <bind tag="class">nopic</bind>
 <apply template="_base">
 
+  <h4 style="text-align: center;">Attending: <attending-count/></h4>
     <form action="/data/merge">
         <input type="hidden" name="s" value="${s}"/>
         <table cellspacing="0">

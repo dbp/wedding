@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections     #-}
+{-# LANGUAGE TupleSections, ScopedTypeVariables     #-}
 
 module Main where
 
@@ -162,6 +162,11 @@ saveRsvp ctxt r (RsvpData l fri sat f em locked unlocked) =
        mapM_ (\(pid, name, conf) -> execute c "update people set include = ?, name = ? where id = ?" (conf, name, pid)) unlocked
        return ()
 
+attendingCount :: Ctxt -> IO Integer
+attendingCount ctxt =
+  withResource (db ctxt) $ \c ->
+    fmap (\([Only (n :: Integer)]) -> n) $ query_ c "select count(*) from people as P join rsvps as R on R.id = P.rsvp_id where P.include = true and R.confirmed_at is not null"
+
 personSubs :: Person -> Substitutions
 personSubs p = L.subs
   [("id", L.textFill $ tshow $ pId p)
@@ -225,8 +230,10 @@ instance FromParam Authenticated where
 rsvpDataH :: Ctxt -> IO (Maybe Response)
 rsvpDataH ctxt = do
   rs <- getAllRsvps ctxt
+  att <- attendingCount ctxt
   renderWith ctxt (L.subs [("rsvps", L.mapSubs rsvpSubs rs)
-                          ,("s", L.textFill password)]) "_data"
+                          ,("s", L.textFill password)
+                          ,("attending-count", L.textFill (tshow att))]) "_data"
 
 redirectAdmin :: IO (Maybe Response)
 redirectAdmin = redirect $ "/data?s=" <> password
