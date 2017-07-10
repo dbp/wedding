@@ -20,7 +20,7 @@
             <ul>
                 <li><a href="/">Home</a></li>
 		            <li><a href="/rsvp">RSVP</a></li>
-                <li><a href="/registry">Registry</a></li>
+                <li><a href="/registry"><strong>Registry (NEW)</strong></a></li>
                 <li><a href="/venue">Venue</a></li>
 		  <li><a href="/schedule">Schedule</a></li>
                 <li><a href="/travel">Travel</a></li>
