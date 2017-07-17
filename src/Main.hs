@@ -167,6 +167,13 @@ attendingCount ctxt =
   withResource (db ctxt) $ \c ->
     fmap (\([Only (n :: Integer)]) -> n) $ query_ c "select count(*) from people as P join rsvps as R on R.id = P.rsvp_id where P.include = true and R.confirmed_at is not null"
 
+
+attendingFriday :: Ctxt -> IO Integer
+attendingFriday ctxt =
+  withResource (db ctxt) $ \c ->
+    fmap (\([Only (n :: Integer)]) -> n) $ query_ c "select count(*) from people as P join rsvps as R on R.id = P.rsvp_id where R.friday = true and P.include = true and R.confirmed_at is not null"
+
+
 personSubs :: Person -> Substitutions
 personSubs p = L.subs
   [("id", L.textFill $ tshow $ pId p)
@@ -231,9 +238,12 @@ rsvpDataH :: Ctxt -> IO (Maybe Response)
 rsvpDataH ctxt = do
   rs <- getAllRsvps ctxt
   att <- attendingCount ctxt
+  fri <- attendingFriday ctxt
   renderWith ctxt (L.subs [("rsvps", L.mapSubs rsvpSubs rs)
                           ,("s", L.textFill password)
-                          ,("attending-count", L.textFill (tshow att))]) "_data"
+                          ,("attending-count", L.textFill (tshow att))
+                          ,("friday-count", L.textFill (tshow fri))
+                          ]) "_data"
 
 redirectAdmin :: IO (Maybe Response)
 redirectAdmin = redirect $ "/data?s=" <> password
