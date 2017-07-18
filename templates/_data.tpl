@@ -1,7 +1,7 @@
 <bind tag="class">nopic</bind>
 <apply template="_base">
 
-  <h4 style="text-align: center;">Attending: <attending-count/> (<friday-count/> friday)</h4>
+  <h4 style="text-align: center;">Attending: <attending-count/> (<friday-count/> Friday)</h4>
   <table cellspacing="0">
     <tr>
       <th>Confirmed</th>
