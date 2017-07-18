@@ -9,7 +9,7 @@
             <th>Confirmed</th>
             <th>URL</th>
             <th>People</th>
-            <th>Housing</th>
+            <th>Friday/Saturday</th>
         </tr>
         <rsvps>
             <tr>
@@ -34,7 +34,7 @@
             <!--<a href="/data/person_add?i=${id}&s=${s}">Add</a> -->
             </td>
             <td>
-              <lodging/>
+              <friday-checked>F,</friday-checked><saturday-checked>S</saturday-checked>
             </td>
         </tr>
         </rsvps>
