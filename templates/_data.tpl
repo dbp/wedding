@@ -8,6 +8,7 @@
       <th>URL</th>
       <th>People</th>
       <th>Friday/Saturday</th>
+      <th>Food</th>
     </tr>
     <rsvps>
       <tr>
@@ -30,6 +31,9 @@
         </td>
         <td>
           <friday-checked>F,</friday-checked><saturday-checked>S</saturday-checked>
+        </td>
+        <td>
+          <food/>
         </td>
       </tr>
     </rsvps>
