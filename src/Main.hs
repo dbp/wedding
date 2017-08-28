@@ -1,6 +1,7 @@
-{-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections, ScopedTypeVariables     #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TupleSections       #-}
 
 module Main where
 
@@ -111,6 +112,7 @@ data Person = Person { pId      :: Int
                      , pLocked  :: Bool
                      , pRsvpId  :: Int
                      , pInclude :: Bool
+                     , pIsKid   :: Bool
                      }
 
 instance FromRow Rsvp where
@@ -128,10 +130,11 @@ instance FromRow Person where
                    <*> field
                    <*> field
                    <*> field
+                   <*> field
 
 
 joinPersons :: Connection -> Rsvp -> IO (Rsvp, [Person])
-joinPersons c x = do p <- query c "select id, name, locked, rsvp_id, include from people where rsvp_id = ? order by id asc" (Only (rId x))
+joinPersons c x = do p <- query c "select id, name, locked, rsvp_id, include, is_kid from people where rsvp_id = ? order by id asc" (Only (rId x))
                      return (x, p)
 
 getRsvp :: Ctxt -> Text -> IO (Maybe (Rsvp, [Person]))
@@ -162,10 +165,15 @@ saveRsvp ctxt r (RsvpData l fri sat f em locked unlocked) =
        mapM_ (\(pid, name, conf) -> execute c "update people set include = ?, name = ? where id = ?" (conf, name, pid)) unlocked
        return ()
 
-attendingCount :: Ctxt -> IO Integer
-attendingCount ctxt =
+attendingAdults :: Ctxt -> IO Integer
+attendingAdults ctxt =
   withResource (db ctxt) $ \c ->
-    fmap (\([Only (n :: Integer)]) -> n) $ query_ c "select count(*) from people as P join rsvps as R on R.id = P.rsvp_id where P.include = true and R.confirmed_at is not null"
+    fmap (\([Only (n :: Integer)]) -> n) $ query_ c "select count(*) from people as P join rsvps as R on R.id = P.rsvp_id where P.include = true and R.confirmed_at is not null and P.is_kid = false"
+
+attendingKids :: Ctxt -> IO Integer
+attendingKids ctxt =
+  withResource (db ctxt) $ \c ->
+    fmap (\([Only (n :: Integer)]) -> n) $ query_ c "select count(*) from people as P join rsvps as R on R.id = P.rsvp_id where P.include = true and R.confirmed_at is not null and P.is_kid = true"
 
 
 attendingFriday :: Ctxt -> IO Integer
@@ -181,7 +189,10 @@ personSubs p = L.subs
   ,("locked", if pLocked p then L.fillChildren else L.textFill "")
   ,("not-locked", if pLocked p then L.textFill "" else L.fillChildren)
   ,("include", if pInclude p then L.fillChildren else L.textFill "")
-  ,("not-include", if pInclude p then L.textFill "" else L.fillChildren)]
+  ,("not-include", if pInclude p then L.textFill "" else L.fillChildren)
+  ,("is-kid", if pIsKid p then L.fillChildren else L.textFill "")
+  ,("not-kid", if pIsKid p then L.textFill "" else L.fillChildren)
+  ]
 
 rsvpSubs :: (Rsvp, [Person]) -> Substitutions
 rsvpSubs (r, ps) = L.subs
@@ -237,11 +248,13 @@ instance FromParam Authenticated where
 rsvpDataH :: Ctxt -> IO (Maybe Response)
 rsvpDataH ctxt = do
   rs <- getAllRsvps ctxt
-  att <- attendingCount ctxt
+  att <- attendingAdults ctxt
+  att_kids <- attendingKids ctxt
   fri <- attendingFriday ctxt
   renderWith ctxt (L.subs [("rsvps", L.mapSubs rsvpSubs rs)
                           ,("s", L.textFill password)
-                          ,("attending-count", L.textFill (tshow att))
+                          ,("attending-adults", L.textFill (tshow att))
+                          ,("attending-kids", L.textFill (tshow att_kids))
                           ,("friday-count", L.textFill (tshow fri))
                           ]) "_data"
 
