@@ -28,8 +28,8 @@
             <not-locked>
               <a href="/data/person_lock?i=${id}&s=${s}">🔒</a>
               <a href="/data/person_delete?i=${id}&s=${s}" onclick="return confirm('Are you sure you want to remove ${name}?')">✗</a>
-            </not-locked>,
-          </span>
+            </not-locked>
+          </span>, 
         </people>
         <span style="display: none">
           <a href="/data/person_add?i=${id}&s=${s}">Add</a>
