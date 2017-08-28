@@ -288,6 +288,17 @@ rsvpPersonUnlockH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "update people set locked = false where id = ?" (Only i)
   redirectAdmin
 
+rsvpPersonIsKidH :: Ctxt -> Int -> IO (Maybe Response)
+rsvpPersonIsKidH ctxt i = do
+  withResource (db ctxt) $ \c -> execute c "update people set is_kid = true where id = ?" (Only i)
+  redirectAdmin
+
+rsvpPersonNotKidH :: Ctxt -> Int -> IO (Maybe Response)
+rsvpPersonNotKidH ctxt i = do
+  withResource (db ctxt) $ \c -> execute c "update people set is_kid = false where id = ?" (Only i)
+  redirectAdmin
+
+
 rsvpPersonDeleteH :: Ctxt -> Int -> IO (Maybe Response)
 rsvpPersonDeleteH ctxt i = do
   withResource (db ctxt) $ \c -> execute c "delete from people where id = ?" (Only i)
@@ -305,6 +316,8 @@ adminH ctxt _ = route ctxt [ end ==> rsvpDataH
                            , path "person_add" // param "i" ==> rsvpPersonAddH
                            , path "person_lock" // param "i" ==> rsvpPersonLockH
                            , path "person_unlock" // param "i" ==> rsvpPersonUnlockH
+                           , path "person_is_kid" // param "i" ==> rsvpPersonIsKidH
+                           , path "person_not_kid" // param "i" ==> rsvpPersonNotKidH
                            , path "person_delete" // param "i" ==> rsvpPersonDeleteH
                            , path "unconfirm" // param "i" ==> rsvpUnconfirmH
                            ]
