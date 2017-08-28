@@ -1,4 +1,4 @@
-<bind tag="class">venue</bind>
+<bind tag="class">travel</bind>
 <apply template="_base">
 
     <h1>Travel to The Lodge</h1>

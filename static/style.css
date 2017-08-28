@@ -47,6 +47,7 @@ h3 {
 table {
     max-width: 600px;
     margin: 10px auto;
+    border-collapse: collapse;
 }
 
 table tr:nth-of-type(odd) {
@@ -224,6 +225,15 @@ input[type=submit]:hover {
 
 #navigation.notfound {
     background-image: url("/static/img/notfound.jpg");
+}
+
+#navigation.travel {
+    background-image: url("/static/img/travel.jpg");
+}
+
+
+#navigation.todo {
+    background-image: url("/static/img/todo.jpg");
 }
 
 
