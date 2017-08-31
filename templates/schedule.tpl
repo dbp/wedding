@@ -14,11 +14,11 @@
         </tr>
         <tr>
           <td>During the day</td>
-          <td>Enjoy the lodge, the lake, hiking trails, grab lunch in Greensboro (at The Willey's Store, or the caf&eacute; in the Highland Center for the Arts), Craftsbury (at The Craftsbury General Store), or in Hardwick (at Positive Pie, Havana 802, etc.). See the <a href="/todo">Things to do</a> tab for more information about things to do around the lodge.</td>
+          <td>Enjoy the lodge, the lake, hiking trails, grab lunch in Greensboro (at the Willey's Store, or the caf&eacute; in the Highland Center for the Arts), Craftsbury (at the Craftsbury General Store), or in Hardwick (at Positive Pie, Havana 802, etc.). See the <a href="/todo">Things to do</a> tab for more information about things to do around the lodge.</td>
         </tr>
         <tr>
           <td><strong>6:30pm</strong></td>
-          <td>Dinner on back lawn (rain location: dining room) for those who have arrived (<em>Dress code: low key, neither ties nor fancy dresses expected</em>).</td>
+          <td>Dinner on back lawn (rain location: dining room) for those who have arrived (<em>dress code: low key, neither ties nor fancy dresses expected</em>).</td>
         </tr>
       </table>
 
@@ -31,7 +31,7 @@
         </tr>
         <tr>
           <td>During the day</td>
-          <td>Enjoy the lodge, the lake, hiking trails, grab lunch in Greensboro (at The Willey's Store, or the caf&eacute; in the Highland Center for the Arts), Craftsbury (at The Craftsbury General Store), or in Hardwick (at Positive Pie, Havana 802, etc.). See the <a href="/todo">Things to do</a> tab for more information about things to do around the lodge.</td>
+          <td>Enjoy the lodge, the lake, hiking trails, grab lunch in Greensboro (at the Willey's Store, or the caf&eacute; in the Highland Center for the Arts), Craftsbury (at the Craftsbury General Store), or in Hardwick (at Positive Pie, Havana 802, etc.). See the <a href="/todo">Things to do</a> tab for more information about things to do around the lodge.</td>
         </tr>
 
         <tr>
@@ -46,7 +46,7 @@
 
         <tr>
           <td><strong>6:30pm</strong></td>
-          <td>Dinner for the adults in dining room (<em>Dress code: cocktail attire, not black tie!</em>).</td>
+          <td>Dinner for the adults in dining room (<em>dress code: cocktail attire</em>).</td>
         </tr>
 
         <tr>
@@ -71,7 +71,7 @@
       <table>
         <tr>
           <td><strong>9:00am-11:00am</strong></td>
-          <td>Sunday Brunch in lodge for all guests (<strong>including those staying off-site</strong>)</td>
+          <td>Sunday Brunch in lodge for all guests (<strong>including those staying off-site</strong>).</td>
         </tr>
       </table>
 
