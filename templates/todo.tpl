@@ -4,9 +4,9 @@
 
   <div class="content">
 
-    <p>In addition to the below, there is a newly opened cafe that serves food in Greensboro as part of the Highland Center for the Arts, open Friday & Saturday 10AM-9PM at 2875 Hardwick Street, Greensboro, Vermont 05841.</p>
+    <p>In addition to the below, there is a newly opened caf&eacute; that serves food in Greensboro as part of the Highland Center for the Arts, open Friday & Saturday 10am-9pm at 2875 Hardwick Street, Greensboro, Vermont 05841.</p>
 
-    <p>Thanks to Anne Cassidy for this list (sorry it's an image, that's how we got it!).</p>
+    <p>Thanks to Anne Cassidy for this list.</p>
 
     <img src="/static/img/interest1.jpg"/>
     <img src="/static/img/interest2.jpg"/>
